@@ -8,7 +8,7 @@ public class WelcomeMessageTest {
 
 	@Test
 	public void testGetMessage() {
-		assertEquals("Hello! Play Framework!!", new WelcomeMessage().getMessage());
+		assertEquals("Hello! Play Framework!!よろしくー", new WelcomeMessage().getMessage());
 	}
 
 }
