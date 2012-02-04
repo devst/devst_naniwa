@@ -13,7 +13,7 @@
     <property name="source" value="1.6"/>
     <path id="devst_naniwa.classpath">
 		<pathelement location="eclipse/classes"/>
-		<fileset dir="lib">
+		<fileset dir="lib.ant">
 			<include name="**/*.jar"/>
 		</fileset>
     </path>
