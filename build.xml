@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="build" name="devst_naniwa">
+    <property environment="env"/>
+    <property name="project_loc:devst_naniwa" value="."/>
+    <property name="junit.output.dir" value="tmp/junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="devst_naniwa.classpath">
+		<pathelement location="eclipse/classes"/>
+		<fileset dir="lib.ant">
+			<include name="**/*.jar"/>
+		</fileset>
+    </path>
+    <path id="run.devst_naniwa.classpath">
+        <pathelement location="conf"/>
+        <path refid="devst_naniwa.classpath"/>
+    </path>
+    <path id="run.Test devst_naniwa.classpath">
+        <pathelement location="conf"/>
+        <pathelement location="../play/modules/testrunner/lib/play-testrunner.jar"/>
+        <path refid="devst_naniwa.classpath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="eclipse/classes"/>
+        <copy includeemptydirs="false" todir="eclipse/classes">
+            <fileset dir="app">
+                <exclude name="**/*.java"/>
+                <exclude name="views/**"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="eclipse/classes">
+            <fileset dir="test">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="eclipse/classes"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="eclipse/classes" source="${source}" target="${target}" includeantruntime="false">
+            <src path="app"/>
+            <exclude name="views/**"/>
+            <classpath refid="devst_naniwa.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="eclipse/classes" source="${source}" target="${target}" includeantruntime="false">
+            <src path="test"/>
+            <classpath refid="devst_naniwa.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="devst_naniwa">
+        <java classname="play.server.Server" failonerror="true" fork="yes">
+            <jvmarg line="-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n -Dplay.debug=yes -Dplay.id= -Dapplication.path=&quot;${project_loc:devst_naniwa}&quot; -Djava.endorsed.dirs=&quot;C:\Users\atsuteru\Developments\play/framework/endorsed&quot; -javaagent:&quot;C:\Users\atsuteru\Developments\play/framework/play-1.2.4.jar&quot;"/>
+            <classpath refid="run.devst_naniwa.classpath"/>
+        </java>
+    </target>
+    <target name="Test devst_naniwa">
+        <java classname="play.server.Server" failonerror="true" fork="yes">
+            <jvmarg line="-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n -Dplay.debug=yes -Dplay.id=test -Dapplication.path=&quot;${project_loc:devst_naniwa}&quot; -Djava.endorsed.dirs=&quot;C:\Users\atsuteru\Developments\play/framework/endorsed&quot; -javaagent:&quot;C:\Users\atsuteru\Developments\play/framework/play-1.2.4.jar&quot;"/>
+            <classpath refid="run.Test devst_naniwa.classpath"/>
+        </java>
+    </target>
+    <target name="WelcomeMessageTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="models.WelcomeMessageTest" todir="${junit.output.dir}"/>
+            <classpath refid="devst_naniwa.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+	<target name="runtests" depends="build">
+		<delete dir="tmp/junit" failonerror="no" />
+		<mkdir dir="tmp/junit"/>
+		<junit printsummary="yes" haltonfailure="false" haltonerror="false"
+			errorproperty="junit.test.error" failureproperty="junit.test.failure">
+			<classpath refid="devst_naniwa.classpath"/>
+			<batchtest fork="yes" todir="tmp/junit">
+				<formatter type="xml" usefile="true"/>
+		        <fileset dir="app">
+		          <include name="**/*Test.java" />
+		          <exclude name="**/TestAll.java" />
+		        </fileset>
+			</batchtest>
+		</junit>
+		<fail if="junit.test.failure" message="Test Failure!!"/>
+		<fail if="junit.test.error" message="Test Error!"/>
+		<echo>All Test complete!</echo>
+	</target>
+</project>
