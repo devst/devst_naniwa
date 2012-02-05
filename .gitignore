@@ -1,2 +1,4 @@
-test-result
-tmp
+/eclipse/classes
+/lib
+/test-result
+/tmp
